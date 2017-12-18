@@ -1,6 +1,8 @@
 package com.example.android.sunshine;
 
-import android.content.AsyncTaskLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.content.Context;
 
 import com.example.android.sunshine.utilities.NetworkUtils;
@@ -14,7 +16,7 @@ public class WeatherLoader<T> extends AsyncTaskLoader<String[]> {
     private String location;
     private String cachedResult[];
 
-    public WeatherLoader(Context context, String location) {
+    WeatherLoader(Context context, String location) {
         super(context);
         this.location = location;
     }

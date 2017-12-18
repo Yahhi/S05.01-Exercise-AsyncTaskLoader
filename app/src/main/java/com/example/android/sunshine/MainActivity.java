@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int LOCATION_LOADER = 22;
+    private static final String LOCATION_KEY = "location";
 
     private RecyclerView mRecyclerView;
     private ForecastAdapter mForecastAdapter;
@@ -112,9 +113,14 @@ public class MainActivity extends AppCompatActivity
 
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
         Bundle locationBundle = new Bundle();
-        locationBundle.putString("location", location);
+        locationBundle.putString(LOCATION_KEY, location);
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String[]> weatherLoader = loaderManager.initLoader(LOCATION_LOADER, locationBundle, this);
+        Loader<String[]> weatherLoader = loaderManager.getLoader(LOCATION_LOADER);
+        if (weatherLoader == null) {
+            loaderManager.initLoader(LOCATION_LOADER, locationBundle, this);
+        } else {
+            loaderManager.restartLoader(LOCATION_LOADER, locationBundle, this);
+        }
     }
 
     // TODO (4) When the load is finished, show either the data or an error message if there is no data
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<String[]> onCreateLoader(int id, Bundle args) {
-        String location = args.getString("location");
+        String location = args.getString(LOCATION_KEY);
         return new WeatherLoader<String[]>(this, location);
     }
 
